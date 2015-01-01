@@ -938,3 +938,97 @@ public class AlphaBetaChess {
 			  return attackScore;
 		  }
 }
+
+
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.util.*;
+
+import javax.swing.JOptionPane;
+public class ChessWebService {
+
+	public static void main(String[] args)
+	{
+        // default port and delay
+        int port = 8080;
+        System.out.println("Enter: ");
+        System.out.println("1 if you would like to start the AI Engine (using parameters evolved by my Genetic Program, although it seems that those parameters are not stronger than the generic original ones I had...e.g. 300 for bishop, 500 for rook)");
+        System.out.println("2 if you would like to see my evolved chess player play against my original chess player (will take about 30 seconds)");
+        System.out.println("3 if you would like to see my genetic program run");
+        Scanner s = new Scanner(System.in);
+//        int selectProgram = s.nextInt();
+		// parse command line arguments to override defaults
+//	      if(selectProgram==1){
+        	if (args.length > 0)
+	        {
+	            try
+	            {
+	                port = Integer.parseInt(args[0]);
+	
+	            }
+				catch (NumberFormatException ex)
+	            {
+	                System.err.println("USAGE: java YahtzeeService [port]");
+	                System.exit(1);
+	            }
+			}
+			
+			// set up an HTTP server to listen on the selected port
+			try
+			{
+				InetSocketAddress addr = new InetSocketAddress(port);
+				HttpServer server = HttpServer.create(addr, 1);
+	       
+				server.createContext("/move.html", new MoveHandler());
+	        
+				server.start();
+			}
+			catch (IOException ex)
+			{
+				ex.printStackTrace(System.err);
+				System.err.println("Could not start server");
+			}
+/*	      } else if (selectProgram==2){
+	    	  System.out.println("Note that this chess engine is built using several parameters (piece capture values as well as positional value tables, with other factors included like weighted scores the deeper we are into the aplha beta tree), but I only evolved values for one set of parameters(piece capture values)");
+	    	  System.out.println("These are the values I used originally (and the ones generally accepted as reflecting the chess pieces relative values)");
+	    	  System.out.println("Bishop: 300, Knight: 300, Rook: 500, Queen: 900, King: 10000, Pawn: 100");
+	    	  System.out.println("And these are the evolved capture values");
+	    	  System.out.println("Bishop: 565, Knight: 496, Rook: 324, Queen: 840, King: 5091, Pawn: 126");
+	    	  ChessIndividual originalChessPlayer = new ChessIndividual(300,300,500,900,10000,100);
+	    	  ChessIndividual evolvedChessPlayer = new ChessIndividual(565,496,324,840,5091,126);
+	    	  System.out.println("You can monitor which player wins over as many games as you would like");
+	    	  boolean done = false;
+	    	  System.out.println("Simulation started, note that Individual 1 is the original player, Individual 2 is the evolved player.");
+	    	  GeneticProg monitorInd = new GeneticProg();
+	    	  while(!done){
+	    		  monitorInd.evaluateIndividuals(originalChessPlayer, evolvedChessPlayer);
+	    		  System.out.println("Enter a 1 if you would like to monitor another game, 2 if you want to exit");
+	    		  int test = s.nextInt();
+	    		  if(test == 2){
+	    			  break;
+	    		  }
+	    	  }
+	      } else if (selectProgram==3){
+	    	  GeneticProg monitorInd = new GeneticProg();
+	    	  System.out.println("Note that this algorithm takes very long (several hours) to complete for anything more than 1 or two generations, and will take longer the more games and individuals you choose to simulate");
+	    	  System.out.println("How many generations would you like to simulate over?");
+	    	  int numGens = s.nextInt();
+	    	  System.out.println("How many games would you like each individual to be evaluated based on?");
+	    	  int numGames = s.nextInt();
+	    	  System.out.println("How many individuals would you like to be in the initial population?");
+	    	  int initPop = s.nextInt();
+	    	  monitorInd.geneticAlgo(numGens, numGames, initPop);
+	      } else {
+	    	  System.out.println("Invalid input: Please run the program again and enter a 1, 2, or 3");
+	    	  System.exit(1);
+	      }*/
+	}
+
+
+}
+
