@@ -1032,3 +1032,37 @@ public class ChessWebService {
 
 }
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
+    public class MoveHandler implements HttpHandler
+    {
+        @Override
+        public void handle(HttpExchange ex) throws IOException
+        {
+            // the query will encode the state as e.g. rkbqabkrppppppp....eee....PPPPPPPPRKBAQBKR
+
+            System.err.println(ex.getRequestURI());
+            String q = ex.getRequestURI().getQuery();
+            
+            //get the move
+            AlphaBetaChess getMove = new AlphaBetaChess(q,300,300,500,900,10000,100);
+            String position = getMove.moveToReturn;
+            
+            // write the response
+			StringBuilder move = new StringBuilder();
+			move.append(position);
+            StringBuilder response = new StringBuilder("{");
+			response.append("\"move\":\"").append(move).append('"');
+			response.append(", \"state\":\"").append(q).append('"');
+			response.append("}");
+			ex.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+            byte[] responseBytes = response.toString().getBytes();
+            ex.sendResponseHeaders(HttpURLConnection.HTTP_OK, responseBytes.length);
+            ex.getResponseBody().write(responseBytes);
+            ex.close();
+        }
+    }
